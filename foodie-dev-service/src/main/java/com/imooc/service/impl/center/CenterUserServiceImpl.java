@@ -19,8 +19,8 @@ public class CenterUserServiceImpl implements CenterUserService {
     @Autowired
     public UsersMapper usersMapper;
 
-    @Autowired
-    private Sid sid;
+//    @Autowired
+//    private Sid sid;
 
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override

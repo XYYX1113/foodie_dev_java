@@ -20,10 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class MyCommentsServiceImpl extends BaseService implements MyCommentsService {
@@ -40,8 +37,8 @@ public class MyCommentsServiceImpl extends BaseService implements MyCommentsServ
     @Autowired
     public ItemsCommentsMapperCustom itemsCommentsMapperCustom;
 
-    @Autowired
-    private Sid sid;
+//    @Autowired
+//    private Sid sid;
 
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
@@ -58,7 +55,8 @@ public class MyCommentsServiceImpl extends BaseService implements MyCommentsServ
 
         // 1. 保存评价 items_comments
         for (OrderItemsCommentBO oic : commentList) {
-            oic.setCommentId(sid.nextShort());
+//            oic.setCommentId(sid.nextShort());
+            oic.setCommentId(UUID.randomUUID().toString());
         }
         Map<String, Object> map = new HashMap<>();
         map.put("userId", userId);
