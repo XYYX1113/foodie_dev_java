@@ -1,0 +1,13 @@
+profiles多环境配置梳理
+1 数据源设置
+    1.1 url 要修改为localhost或生产ip
+    1.2 密码要适时修改
+
+2  日志在dev环境需要打印   prod无需打印
+
+3  图片保存目录 和 图片服务请求路径配置
+        file.imageUserFaceLocation=/workspaces/images/foodie/faces
+        file.imageServerUrl=http://192.168.127.188:8088/foodie-dev-api/foodie/faces
+
+4   从支付中心回调天天吃货后端服务地址
+    http://api.z.mukewang.com/foodie-dev-api/orders/notifyMerchantOrderPaid
