@@ -35,6 +35,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!--打war包添加依赖-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>
