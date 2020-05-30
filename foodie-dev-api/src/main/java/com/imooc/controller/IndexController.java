@@ -76,10 +76,19 @@ public class IndexController {
             @ApiParam(name = "rootCatId",value = "一级分类ID",required = true)
             @PathVariable Integer rootCatId)
             {
+                List<CategoryVO> list=new ArrayList<>();
                 if (rootCatId==null){
                     return IMOOCJSONResult.errorMsg("分类不存在");
                 }
-                List<CategoryVO> list = categoryService.getSubCatList(rootCatId);
+                String subCatStr = redisOperator.get("subCat");
+                if (StringUtil.isEmpty(subCatStr)){
+                    list = categoryService.getSubCatList(rootCatId);
+                    redisOperator.set("subCat",JsonUtils.objectToJson(list));
+                }else{
+                    list= JsonUtils.jsonToList(subCatStr, CategoryVO.class);
+                }
+
+
                 return IMOOCJSONResult.ok(list);
     }
 
