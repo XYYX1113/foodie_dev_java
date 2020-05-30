@@ -8,6 +8,8 @@ import com.imooc.service.CarouselService;
 
 import com.imooc.service.CategoryService;
 import com.imooc.utils.IMOOCJSONResult;
+import com.imooc.utils.JsonUtils;
+import com.imooc.utils.RedisOperator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -16,6 +18,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tk.mybatis.mapper.util.StringUtil;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Api(value = "首页", tags = {"首页展示的相关接口"})
@@ -27,11 +32,21 @@ public class IndexController {
     private CarouselService carouselService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private RedisOperator redisOperator;
 
      @ApiOperation(value = "获取首页轮播图",notes = "获取首页轮播图",httpMethod = "GET")
      @GetMapping("/carousel")
     public IMOOCJSONResult carousel(){
-        List<Carousel> list = carouselService.queryAll(YesOrNo.YES.type);
+         String carouselStr = redisOperator.get("carousel");
+         List<Carousel> list=new ArrayList<>();
+         if (StringUtil.isEmpty(carouselStr)){
+                list= carouselService.queryAll(YesOrNo.YES.type);
+                redisOperator.set("carousel", JsonUtils.objectToJson(list));
+         }else {
+              list = JsonUtils.jsonToList(carouselStr, Carousel.class);
+         }
+
         return IMOOCJSONResult.ok(list);
     }
 
@@ -43,7 +58,15 @@ public class IndexController {
     @ApiOperation(value = "获取分类",notes = "获取分类",httpMethod = "GET")
     @GetMapping("/cats")
     public IMOOCJSONResult cats(){
-        List<Category> list = categoryService.queryAllRootLevelCat();
+        List<Category> list =new ArrayList<>() ;
+        String catsStr = redisOperator.get("cats");
+        if (StringUtil.isEmpty(catsStr)){
+            list = categoryService.queryAllRootLevelCat();
+            redisOperator.set("cats",JsonUtils.objectToJson(list));
+        }else{
+            list= JsonUtils.jsonToList(catsStr, Category.class);
+        }
+
         return IMOOCJSONResult.ok(list);
     }
 
